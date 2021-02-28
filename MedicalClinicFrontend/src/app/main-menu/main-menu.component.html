@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item" *ngIf="auth.hasRoleOwner()">
+                <a class="nav-link" routerLink="/owner" routerLinkActive="active" id="owner">{{translate.menu.owner}}</a>
+            </li>
+            <li class="nav-item" *ngIf="auth.hasRoleAdmin()">
+                <a class="nav-link" routerLink="/admin" routerLinkActive="active" id="admin">{{translate.menu.admin}}</a>
+            </li>
+            <li class="nav-item" *ngIf="auth.hasRoleEmployee()">
+                <a class="nav-link" routerLink="/employee" routerLinkActive="active" id="employee">{{translate.menu.employee}}</a>
+            </li>
+            <li class="nav-item" *ngIf="auth.hasRoleDoctor()">
+                <a class="nav-link" routerLink="/doctor" routerLinkActive="active" id="doctor">{{translate.menu.doctor}}</a>
+            </li>
+            <li class="nav-item" *ngIf="auth.hasRolePatient()">
+                <a class="nav-link" routerLink="/patient" routerLinkActive="active" id="patient">{{translate.menu.patient}}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" id="homePage">{{translate.menu.home}}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/agenda" routerLinkActive="active" id="agenda">{{translate.menu.agenda}}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/contactus" routerLinkActive="active" id="contactus">{{translate.menu.contactus}}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/login" routerLinkActive="active" id="login">{{translate.menu.signin}}</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto" *ngIf="auth.getLoggedUserName()">
+            <li class="nav-item">
+                <div class="nav-link active text-info">
+                    {{translate.menu.logged}} {{auth.getLoggedUserName()}}
+                </div>
+            </li>
+            <li class="nav-item">
+                <button (click)="auth.logOut()" class="btn btn-outline-light">{{translate.menu.logout}}</button>
+            </li>
+        </ul>
+    </div>
+</nav>

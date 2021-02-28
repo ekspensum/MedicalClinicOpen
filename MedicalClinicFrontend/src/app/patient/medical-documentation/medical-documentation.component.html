@@ -1,0 +1,86 @@
+<div *ngIf="medicalDocumentList.length === 0">
+  <p colspan="4">{{translate.header.medicalDocNotFound}}</p>
+</div>
+<form [formGroup]="medicalDocumentForm" (ngSubmit)="updateMedicalDocumentation()">
+  <div *ngIf="medicalDocumentList.length > 0" formArrayName="medicalDocInnerFormArray">
+    <table class="table table-sm table-striped">
+      <thead class="thead-light">
+        <tr>
+          <th>#</th>
+          <th class="col-6">{{translate.header.description}}</th>
+          <th class="col-1">{{translate.home.fileName}}</th>
+          <th class="col-1">{{translate.home.fileType}}</th>
+          <th class="col-1">{{translate.home.fileSize}}</th>
+          <th class="col-1 text-center">Link</th>
+          <th class="col-1 text-center">{{translate.header.enabled}}</th>
+          <th class="col-1 text-center">{{translate.button.delete}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let medicalDoc of medicalDocumentList; let i = index">
+          <ng-container [formGroupName]="i">
+            <th scope="row">{{i+1}}</th>
+            <td>
+              <textarea formControlName="description" rows="2" class="form-control" style="min-width: 150px; font-size: small;"
+                          [class.is-invalid]="medicalDocumentFormArray.controls[i].get('description').invalid &&
+                          medicalDocumentFormArray.controls[i].get('description').touched"></textarea>
+              <div class="text-danger" [class.d-none]="medicalDocumentFormArray.controls[i].get('description').valid ||
+                          medicalDocumentFormArray.controls[i].get('description').untouched">
+                <small>{{translate.error.requiredField}}</small>
+              </div>
+            </td>
+            <td>{{medicalDoc.fileName}}</td>
+            <td>{{medicalDoc.fileType}}</td>
+            <td>{{medicalDoc.fileSize}}</td>
+            <td>
+              <button type="button" [disabled]="!medicalDocListSaved" (click)="onDisplayFile(medicalDoc)"
+              class="btn btn-outline-secondary btn-sm">Link</button>
+            </td>
+            <td align="center">
+              <input formControlName="enabled" type="checkbox" name="enabled"
+              style="
+              -ms-transform: scale(1.3); /* IE */
+              -moz-transform: scale(1.3); /* FF */
+              -webkit-transform: scale(1.3); /* Safari and Chrome */
+              -o-transform: scale(1.3); /*Opera*/
+              transform: scale(1.3);
+              padding: 5px;">
+            </td>
+            <td>
+              <button type="button" [disabled]="!medicalDocListSaved" (click)="onRemoveFile(medicalDoc.id)"
+              class="btn btn-outline-danger btn-sm">{{translate.button.delete}}</button>
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+    <div class="form-group">
+      <input type="submit" [disabled]="medicalDocumentForm.invalid" value="{{translate.button.save}}" class="btn btn-primary float-right">
+    </div>
+  </div>
+  <div class="form-group">
+    <input type="file" name="file" #fileInput style="display: none;" (change)="onFileSelect($event)" multiple>
+    <button type="button" (click)="fileInput.click()" id="file" class="btn btn-outline-secondary float-left">{{translate.home.selectFiles}}</button>
+  </div>
+</form>
+<br><br>
+<div id="server_answer">
+  <div class="alert alert-success alert-dismissible" *ngIf="answer.serverAnswer === 'UPDATE_MEDICAL_DOCUMENTATION'">
+    <button type="button" class="close" data-dismiss="alert" (click)="answer.serverAnswer = null">OK</button>
+    <strong>{{answer.subject}}</strong> {{answer.message}}
+  </div>
+  <div class="alert alert-danger alert-dismissible" *ngIf="answer.errorStatus >= 0">
+    <button type="button" class="close" data-dismiss="alert" (click)="answer.errorStatus = -1" >OK</button>
+    <strong>{{answer.subject}}</strong> {{answer.message}}
+  </div>
+</div>
+
+<div class="alert alert-danger alert-dismissible" *ngIf="errorFileExcced">
+  <button type="button" class="close" data-dismiss="alert" (click)="errorFileExcced = false">OK</button>
+  <strong>{{translate.error.subject}}</strong> {{errorFileMeesage}}
+</div>
+
+<div *ngIf="image">
+  <img [src]="image" alt="Sign Thumbnail">
+  <!-- <a class="view-btn-attach" [href]="image" target="_blank">View</a> -->
+</div>

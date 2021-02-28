@@ -1,0 +1,57 @@
+<form [formGroup]="dateRangeForm" (ngSubmit)="searchDoctorVisits()" class="form-inline mt-2">
+  <div class="form-group">
+    <input type="date" formControlName="dateFrom" class="form-control mx-1">
+    <input type="date" formControlName="dateTo" class="form-control mx-1">
+    <input type="submit" value="{{translate.button.search}}" class="btn btn-primary mx-1">
+  </div>
+</form>
+<br>
+<div class="alert alert-danger alert-dismissible" *ngIf="foundZeroVisits">
+  <button type="button" class="close" data-dismiss="alert" (click)="foundZeroVisits = false">OK</button>
+  <strong>{{translate.error.subject}}</strong> {{translate.error.none}}
+</div>
+<div *ngIf="visitList ? visitList.length > 0 ? true : false : false">
+  <table class="table table-sm table-striped table-responsive">
+    <thead class="thead-light">
+      <tr>
+        <th style="width: 20%">{{translate.visit.visitDateTime}}</th>
+        <th style="width: 20%">{{translate.menu.patient}}</th>
+        <th style="width: 15%">{{translate.header.patientPhoto}}</th>
+        <th style="width: 30%">{{translate.header.patientAilments}}</th>
+        <th style="width: 10%">{{translate.visit.visitStatus}}</th>
+        <th style="width: 5%">{{translate.button.select}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let visit of visitList">
+        <td>{{visit.visitDateTime | slice:0:10}} {{visit.visitDateTime | slice:11:16}}</td>
+        <td>{{visit.patient.user.firstName +' '+visit.patient.user.lastName}}</td>
+        <td>
+          <img [src]="visit.patient.user.photo ? 'data:image/png;base64,' + visit.patient.user.photo : 'assets/img/alterphoto.jpeg'"
+          style="width: 100px;" alt="Image">
+        </td>
+        <td style="font-size: small;">{{visit.patientAilmentsInfo}}</td>
+        <td>{{translateVisitStatus(visit.visitStatus)}}</td>
+        <td align="center">
+          <input type="radio" name="selectVisitId" [(ngModel)]="selectVisitId" [value]="visit.id" style="
+            -ms-transform: scale(1.7); /* IE */
+            -moz-transform: scale(1.7); /* FF */
+            -webkit-transform: scale(1.7); /* Safari and Chrome */
+            -o-transform: scale(1.7); /*Opera*/
+            transform: scale(1.7);
+            padding: 5px;">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="form-group">
+    <input (click)="selectVisit()" [disabled]="!selectVisitId" type="button" value="{{translate.button.details}}" class="btn btn-primary float-left">
+  </div>
+  <div class="form-group">
+    <input type="button" (click)="generateVisitListPdf()" value="{{translate.button.createPdf}}" class="btn btn-outline-secondary float-right">
+  </div>
+</div>
+<div class="alert alert-danger alert-dismissible" *ngIf="answer.errorStatus >= 0">
+  <button type="button" class="close" data-dismiss="alert" (click)="answer.errorStatus = -1">OK</button>
+  <strong>{{answer.subject}}</strong> {{answer.message}}
+</div>

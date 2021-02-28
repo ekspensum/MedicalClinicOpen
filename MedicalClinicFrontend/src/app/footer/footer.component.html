@@ -1,0 +1,30 @@
+<footer class="footer">
+  <div class="container my-1">
+    <div class="row">
+      <small class="text-muted col-4">
+        <span class="row">
+          {{company.companyName}}
+        </span>
+        <span class="row">
+          {{company.zipCode+' '+company.city+' '+company.street+' '+company.streetNo}}
+          {{company.unitNo ? ' / '+company.unitNo : ''}}
+        </span>
+      </small>
+      <small class="text-muted col-4">
+        <span class="row">
+          {{company.email}}
+        </span>
+        <span class="row">
+          {{translate.user.phone+' '+company.phone1}}
+          {{company.phone2 ? translate.user.phone+' '+company.phone2 : ''}}
+        </span>
+      </small>
+      <small class="text-muted col-4">
+        &nbsp;
+        <div class="row">
+          copyright © aticode
+        </div>
+      </small>
+    </div>
+  </div>
+</footer>

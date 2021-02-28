@@ -1,0 +1,54 @@
+<form [formGroup]="clinicFreeDayForm" (ngSubmit)="addClinicFreeDayOnSubmit()">
+  <div class="form-group">
+    <label for="clinicFreeDay">{{translate.visit.addClinicFreeDay}}</label>
+    <input type="date" formControlName="clinicFreeDay" id="clinicFreeDay" class="form-control form-control-sm">
+  </div>
+  <div class="form-group">
+    <input [disabled]="!clinicFreeDayForm.get('clinicFreeDay').value" class="btn btn-primary float-right" type="submit" value="{{translate.button.save}}">
+  </div>
+</form>
+<br><br>
+<table class="table table-striped">
+  <thead align="center">
+    <tr>
+      <th>Index</th>
+      <th>{{translate.visit.freeDay}}</th>
+      <th>{{translate.button.delete}}</th>
+    </tr>
+  </thead>
+  <tbody align="center">
+    <tr *ngFor="let clinicFreeDay of clinicFreeDayList; index as i">
+      <td>{{i+1}}</td>
+      <td>{{clinicFreeDay.freeDay}}</td>
+      <td>
+        <input [(ngModel)]="clinicFreeDayId" type="radio" [value]="clinicFreeDay.id" name="clinicFreeDayId"
+        id="{{clinicFreeDay.freeDay}}"
+        style="
+        -ms-transform: scale(1.5); /* IE */
+        -moz-transform: scale(1.5); /* FF */
+        -webkit-transform: scale(1.5); /* Safari and Chrome */
+        -o-transform: scale(1.5); /*Opera*/
+        transform: scale(1.5);
+        padding: 5px;">
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="server_answer">
+  <div class="alert alert-success alert-dismissible" *ngIf="answer.serverAnswer === 'ADDED' || answer.serverAnswer === 'FREE_DAY_REMOVED'">
+    <button type="button" class="close" data-dismiss="alert" (click)="answer.serverAnswer = null">OK</button>
+    <strong>{{answer.subject}}</strong> {{answer.message}}
+  </div>
+  <div class="alert alert-danger alert-dismissible" *ngIf="answer.serverAnswer === 'PAST_DATE'">
+    <button type="button" class="close" data-dismiss="alert" (click)="answer.serverAnswer = null">OK</button>
+    <strong>{{answer.subject}}</strong> {{answer.message}}
+  </div>
+  <div class="alert alert-danger alert-dismissible" *ngIf="answer.errorStatus >= 0">
+    <button type="button" class="close" data-dismiss="alert" (click)="answer.errorStatus = -1" >OK</button>
+    <strong>{{answer.subject}}</strong> {{answer.message}}
+  </div>
+</div>
+<div class="form-group">
+  <input [disabled]="!clinicFreeDayId" class="btn btn-primary float-right" type="button" (click)="deleteFreeDay()" value="{{translate.button.delete}}">
+</div>

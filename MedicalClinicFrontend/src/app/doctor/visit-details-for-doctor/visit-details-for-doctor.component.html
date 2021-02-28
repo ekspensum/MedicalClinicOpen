@@ -1,0 +1,91 @@
+<div *ngIf="visit" class="jumbotron py-2">
+  <h5>
+    {{translate.visit.details}}
+  </h5>
+  <br>
+  <h6>
+    {{translate.menu.patient + ': '+ visit.patient.user.firstName +' '+ visit.patient.user.lastName}}
+    <img [src]="visit.patient.user.photo ? 'data:image/png;base64,' + visit.patient.user.photo : 'assets/img/alterphoto.jpeg'"
+    style="width: 150px;" alt="Image" class="mx-4">
+    <span>{{'PESEL: '+visit.patient.pesel}}</span>
+  </h6>
+  <h6>
+    {{translate.header.medicalDocumentation}}
+  </h6>
+  <div *ngIf="enabledMedicalDocList.length > 0; else elseBlock">
+    <table class="table table-striped" style="font-size: small;">
+      <thead class="thead-light">
+        <tr>
+          <th>#</th>
+          <th class="col-1">{{translate.header.description}}</th>
+          <th>{{translate.home.fileName}}</th>
+          <th>{{translate.home.fileType}}</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let medicalDoc of enabledMedicalDocList; let i = index">
+          <th scope="row">{{i+1}}</th>
+          <td>{{visit.patient.medicalDocumentList[i].description}}</td>
+          <td>{{medicalDoc.fileName}}</td>
+          <td>{{medicalDoc.fileType}}</td>
+          <td>
+            <input type="button" value="Link" (click)="onDisplayFile(medicalDoc)" class="btn btn-outline-secondary btn-sm">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-template #elseBlock>
+    <p>{{translate.header.medicalDocNotFound}}</p>
+  </ng-template>
+  <h6>
+    {{translate.menu.doctor + ': '+ visit.doctor.user.firstName +' '+ visit.doctor.user.lastName}}
+  </h6>
+  <p>
+    {{translate.visit.visitDateTime +': '}} {{visit.visitDateTime | slice:0:10}} {{visit.visitDateTime | slice:11:16}}
+  </p>
+  <p>
+    {{translate.visit.visitStatus +': '}} {{translateVisitStatus(visit.visitStatus)}}
+  </p>
+  <p>
+    {{translate.visit.patientAilmentsInfo +' '+ (visit.patientAilmentsInfo ? visit.patientAilmentsInfo : '')}}
+  </p>
+  <div *ngIf="visit.diagnosis">
+    <p>
+      <b>{{translate.visit.diagnosis}}</b>
+    </p>
+    <div>{{visit.diagnosis.ailments}}</div>
+    <div>{{visit.diagnosis.orders}}</div>
+    <div>{{visit.diagnosis.medicines}}</div>
+    <div *ngIf="visit.diagnosis.referralList.length > 0">
+      <table class="table table-striped">
+        <thead class="thead-light">
+          <th>#</th>
+          <th>{{translate.header}}</th>
+          <th>{{translate.header}}</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let referral of visit.diagnosis.referralList;let i = index">
+            <td>{{i}}</td>
+            <td>{{referral.recognition}}</td>
+            <td>{{referral.researchUnit}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p>
+    {{translate.visit.reservation +': '}} {{visit.reservationDateTime | slice:0:10}}
+  </p>
+  <p *ngIf="visit.employee;">
+    {{translate.visit.reservationByEmployee +': '}} {{visit.employee.user.firstName +' '+ visit.employee.user.lastName}}
+  </p>
+  <p *ngIf="!visit.employee;">
+    {{translate.visit.reservationByPatient}}
+  </p>
+</div>
+<div class="alert alert-danger alert-dismissible" *ngIf="answer.errorStatus >= 0">
+  <button type="button" class="close" data-dismiss="alert" (click)="answer.errorStatus = -1">OK</button>
+  <strong>{{answer.subject}}</strong> {{answer.message}}
+</div>

@@ -1,0 +1,73 @@
+<main class="container">
+  <div class="col-md-8 lg-10 pt-3">
+    <h5>{{translate.visit.agenda}}</h5>
+    <form>
+      <div class="form-group">
+        <label for=""></label>
+        <select [(ngModel)]="selectedIndex" class="form-control font-weight-bold" name="selectDoctor" id="selectDoctor">
+          <option value="-1">Select</option>
+          <option *ngFor="let doctor of doctorList; let i=index" [ngValue]="i">
+            {{doctor.user.firstName}} {{doctor.user.lastName}}
+          </option>
+        </select>
+      </div>
+    </form>
+    <div *ngIf="selectedIndex >= 0">
+      <div class="jumbotron py-2">
+        <h5>
+          {{doctorList[selectedIndex].user.firstName}} {{doctorList[selectedIndex].user.lastName}}
+        </h5>
+        <table>
+          <tr>
+            <td>
+              <img [src]="doctorList[selectedIndex].user.photo ? 'data:image/png;base64,' + doctorList[selectedIndex].user.photo : 'assets/img/alterphoto.jpeg'"
+              style="width: 150px;" alt="Image">
+            </td>
+            <td class="pl-5">{{doctorList[selectedIndex].experience}}</td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <div class="form-group">
+          <input class="btn btn-info float-left" type="button" value="{{translate.button.previousWeek}}" [attr.disabled]="dayFrom === 0 ? 'disabled' : null" (click)="goToPreviousWeek()">
+          <input class="btn btn-info float-right" type="button" value="{{translate.button.nextWeek}}" [attr.disabled]="dayTo === 21 ? 'disabled' : null" (click)="goToNextWeek()">
+        </div>
+        <br><br>
+        <form>
+          <table *ngFor="let workingDayMap of doctorList[selectedIndex].workingWeek.workingWeekMap; index as i" class="table table-striped table-bordered">
+            <thead align="center">
+              <tr>
+                <th style="width: 50%">{{workingDayMap.visitDate}} {{translateDayOfWeek(workingDayMap.dayOfWeek)}}</th>
+                <th style="width: 50%">{{workingDayMap.freeDay ? translate.user.doesNotWork : workingDayMap.working ? translate.user.workingHour : translate.user.doesNotWork}}</th>
+              </tr>
+            </thead>
+            <tbody align="center" *ngIf="!workingDayMap.freeDay">
+              <tr *ngFor="let workingHourMap of workingDayMap.workingHourMapList; index as j">
+                <td>{{workingHourMap.workingTime | slice:0:5}}</td>
+                <td [class]="workingHourMap.disabled ? 'table-secondary' : ''">
+                  {{workingHourMap.disabled ? translate.visit.takenTerm : translate.visit.freeTerm}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="form-group">
+            <input class="btn btn-info float-left" type="button" value="{{translate.button.previousWeek}}" [attr.disabled]="dayFrom === 0 ? 'disabled' : null" (click)="goToPreviousWeek()">
+            <input class="btn btn-info float-right" type="button" value="{{translate.button.nextWeek}}" [attr.disabled]="dayTo === 21 ? 'disabled' : null" (click)="goToNextWeek()">
+          </div>
+          <br><br>
+          <div id="server_answer">
+            <div class="alert alert-danger alert-dismissible" *ngIf="answer.errorStatus >= 0">
+              <button type="button" class="close" data-dismiss="alert" (click)="answer.errorStatus = -1">OK</button>
+              <strong>{{answer.subject}}</strong> {{answer.message}}
+            </div>
+          </div>
+          <div class="alert alert-danger alert-dismissible" *ngIf="doctorList ? doctorList.length === 0 : ''">
+            <button type="button" class="close" data-dismiss="alert">OK</button>
+            <strong>{{translate.error.subject}}</strong> {{translate.error.none}}
+          </div>
+        </form>
+      </div>
+    </div>
+    <br><br>
+  </div>
+</main>

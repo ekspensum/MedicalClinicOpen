@@ -1,0 +1,38 @@
+<form (ngSubmit)="updateDoctorAgenda()" *ngIf="workingWeek">
+  <table *ngFor="let workingDayMap of workingWeek.workingWeekMap; index as i" class="table table-striped table-bordered">
+    <thead align="center">
+      <tr>
+        <th>{{translateDayOfWeek(workingDayMap.dayOfWeek)}}</th>
+        <th>{{translate.user.workingHour}}</th>
+      </tr>
+    </thead>
+    <tbody align="center">
+      <tr *ngFor="let workingHourMap of workingDayMap.workingHourMapList; index as j">
+        <td style="width: 50%;">{{workingHourMap.workingTime | slice:0:5}}</td>
+        <td style="width: 50%;">
+          <input [(ngModel)]="workingHourMap.working" type="checkbox" name="working{{i}}{{j}}" id="working{{i}}{{j}}"
+            style="
+              -ms-transform: scale(1.7); /* IE */
+              -moz-transform: scale(1.7); /* FF */
+              -webkit-transform: scale(1.7); /* Safari and Chrome */
+              -o-transform: scale(1.7); /*Opera*/
+              transform: scale(1.7);
+              padding: 5px;">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="form-group">
+    <input class="btn btn-primary" type="submit" value="{{translate.button.save}}">
+  </div>
+</form>
+<div id="server_answer">
+  <div class="alert alert-success alert-dismissible" *ngIf="answer.serverAnswer === 'UPDATED'">
+      <button type="button" class="close" data-dismiss="alert" (click)="answer.serverAnswer = null">OK</button>
+      <strong>{{answer.subject}}</strong> {{answer.message}}
+  </div>
+  <div class="alert alert-danger alert-dismissible" *ngIf="answer.errorStatus >= 0">
+      <button type="button" class="close" data-dismiss="alert" (click)="answer.errorStatus = -1">OK</button>
+      <strong>{{answer.subject}}</strong> {{answer.message}}
+  </div>
+</div>

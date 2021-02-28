@@ -1,0 +1,199 @@
+<form [formGroup]="searchVisitForm" (ngSubmit)="onSubmitSearchVisit()" class="form-inline mt-2">
+  <div class="form-group">
+    <input type="date" formControlName="dateFrom" class="form-control m-1">
+    <input type="date" formControlName="dateTo" class="form-control m-1">
+    <select formControlName="visitStatus" class="form-control font-weight-bold m-1">
+      <option *ngFor="let visitStatusEnum of visitStatusList" [ngValue]="visitStatusEnum"
+        [selected]="visitStatusEnum === 'PLANNED'">
+        {{translateVisitStatus(visitStatusEnum)}}
+      </option>
+    </select>
+    <input type="submit" value="{{translate.button.search}}" class="btn btn-primary mx-1">
+  </div>
+</form>
+<br>
+<div class="alert alert-danger alert-dismissible" *ngIf="foundZeroVisits">
+  <button type="button" class="close" data-dismiss="alert" (click)="foundZeroVisits = false">OK</button>
+  <strong>{{translate.error.subject}}</strong> {{translate.error.none}}
+</div>
+<div *ngIf="!visit">
+  <div *ngIf="visitList ? visitList.length > 0 ? true : false : false">
+    <table class="table table-sm table-striped table-responsive">
+      <thead class="thead-light">
+        <tr>
+          <th style="width: 20%">{{translate.visit.visitDateTime}}</th>
+          <th style="width: 20%">{{translate.menu.patient}}</th>
+          <th style="width: 15%">{{translate.header.patientPhoto}}</th>
+          <th style="width: 40%">{{translate.header.patientAilments}}</th>
+          <th style="width: 5%">{{translate.button.select}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let visit of visitList">
+          <td>{{visit.visitDateTime | slice:0:10}} {{visit.visitDateTime | slice:11:16}}</td>
+          <td>{{visit.patient.user.firstName +' '+visit.patient.user.lastName}}</td>
+          <td>
+            <img [src]="visit.patient.user.photo ? 'data:image/png;base64,' + visit.patient.user.photo : 'assets/img/alterphoto.jpeg'"
+            style="width: 100px;" alt="Image">
+          </td>
+          <td style="font-size: small;">{{visit.patientAilmentsInfo}}</td>
+          <td align="center">
+            <input type="radio" name="selectVisitId" [(ngModel)]="selectedVisitId" [value]="visit.id"
+            style="
+              -ms-transform: scale(1.7); /* IE */
+              -moz-transform: scale(1.7); /* FF */
+              -webkit-transform: scale(1.7); /* Safari and Chrome */
+              -o-transform: scale(1.7); /*Opera*/
+              transform: scale(1.7);
+              padding: 5px;">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="form-group">
+      <input (click)="selectVisit()" [disabled]="!selectedVisitId" class="btn btn-primary" type="button" value="{{translate.button.select}}">
+    </div>
+  </div>
+</div>
+<div *ngIf="visit">
+  <div class="jumbotron py-2">
+    <h6>
+      {{translate.menu.patient + ': '+ visit.patient.user.firstName +' '+ visit.patient.user.lastName}}
+      <img [src]="visit.patient.user.photo ? 'data:image/png;base64,' + visit.patient.user.photo : 'assets/img/alterphoto.jpeg'"
+      style="width: 150px;" alt="Image" class="mx-4">
+      <span>{{'PESEL: '+visit.patient.pesel}}</span>
+    </h6>
+    <h6>
+      {{translate.header.medicalDocumentation}}
+    </h6>
+    <div *ngIf="enabledMedicalDocList.length > 0; else elseBlock">
+      <table class="table table-striped" style="font-size: small;">
+        <thead class="thead-light">
+          <tr>
+            <th>#</th>
+            <th class="col-1">{{translate.header.description}}</th>
+            <th>{{translate.home.fileName}}</th>
+            <th>{{translate.home.fileType}}</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let medicalDoc of enabledMedicalDocList; let i = index">
+            <th scope="row">{{i+1}}</th>
+            <td>{{medicalDoc.description}}</td>
+            <td>{{medicalDoc.fileName}}</td>
+            <td>{{medicalDoc.fileType}}</td>
+            <td>
+              <input type="button" value="Link" (click)="onDisplayFile(medicalDoc)" class="btn btn-outline-secondary btn-sm">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #elseBlock>
+      <p>{{translate.header.medicalDocNotFound}}</p>
+    </ng-template>
+    <h6>{{translate.menu.doctor + ': '+ visit.doctor.user.firstName +' '+ visit.doctor.user.lastName}}</h6>
+    <p>{{translate.visit.visitDateTime +': '}} {{visit.visitDateTime | slice:0:10}} {{visit.visitDateTime | slice:11:16}}</p>
+    <p>{{translate.visit.visitStatus +': '}} {{translateVisitStatus(visit.visitStatus)}}</p>
+    <p>{{translate.visit.patientAilmentsInfo +' '+ (visit.patientAilmentsInfo ? visit.patientAilmentsInfo : '')}}</p>
+  </div>
+  <form [formGroup]="makeDiagnosisForm" (ngSubmit)="onSubmitMakeDiagnosis()">
+    <div class="form-group">
+      <label for="ailments">{{translate.visit.ailmentDiagnosedDoctor}}</label>
+      <textarea formControlName="ailments" id="ailments" class="form-control" rows="5"
+      [class.is-invalid]="makeDiagnosisForm.get('ailments').invalid && makeDiagnosisForm.get('ailments').touched"></textarea>
+      <small class="text-danger" [class.d-none]="makeDiagnosisForm.get('ailments').valid || makeDiagnosisForm.get('ailments').untouched">{{translate.error.requiredField}}</small>
+    </div>
+    <div class="form-group">
+      <label for="orders">{{translate.visit.orders}}</label>
+      <textarea formControlName="orders" id="orders" class="form-control" rows="10"
+      [class.is-invalid]="makeDiagnosisForm.get('orders').invalid && makeDiagnosisForm.get('orders').touched"></textarea>
+      <small class="text-danger" [class.d-none]="makeDiagnosisForm.get('orders').valid || makeDiagnosisForm.get('orders').untouched">{{translate.error.requiredField}}</small>
+    </div>
+    <div class="form-group">
+      <label for="medicines">{{translate.visit.medicines}}</label>
+      <textarea formControlName="medicines" id="medicines" class="form-control" rows="5"
+      [class.is-invalid]="makeDiagnosisForm.get('medicines').invalid && makeDiagnosisForm.get('medicines').touched"></textarea>
+      <small class="text-danger" [class.d-none]="makeDiagnosisForm.get('medicines').valid || makeDiagnosisForm.get('medicines').untouched">{{translate.error.requiredField}}</small>
+    </div>
+    <div class="form-group float-right">
+      <input type="button" [disabled]="makeDiagnosisForm.invalid" (click)="generateDiagnosisPdf()" 
+      value="{{translate.button.createPdf}}" class="btn btn-outline-secondary">
+    </div>
+    <div formArrayName="referralList" class="form-group">
+      <p *ngIf="referralFormArray.controls.length > 0"><b>{{translate.header.referrals}}</b></p>
+      <table class="table table-bordered">
+        <tbody>
+          <tr *ngFor="let referralForm of referralFormArray.controls; index as i">
+            <ng-container [formGroupName]="i">
+              <td style="width: 5%;">{{i+1}}.</td>
+              <td style="width: 85%;">
+                <table class="table">
+                  <tr>
+                    <td>
+                      <div>{{translate.header.recognition}}</div>
+                      <textarea formControlName="recognition" rows="2" class="form-control"
+                      [class.is-invalid]="referralForm.get('recognition').invalid && referralForm.get('recognition').touched"></textarea>
+                      <div class="text-danger" [class.d-none]="referralForm.get('recognition').valid || referralForm.get('recognition').untouched">
+                        <small>{{translate.error.requiredField}}</small>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div>{{translate.header.scopeOfExam}}</div>
+                      <textarea formControlName="scopeOfExam" rows="2" class="form-control"
+                      [class.is-invalid]="referralForm.get('scopeOfExam').invalid && referralForm.get('scopeOfExam').touched"></textarea>
+                      <div class="text-danger" [class.d-none]="referralForm.get('scopeOfExam').valid || referralForm.get('scopeOfExam').untouched">
+                        <small>{{translate.error.requiredField}}</small>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div>{{translate.header.researchUnit}}</div>
+                      <textarea formControlName="researchUnit" rows="2" class="form-control"
+                      [class.is-invalid]="referralForm.get('researchUnit').invalid && referralForm.get('researchUnit').touched"></textarea>
+                      <div class="text-danger" [class.d-none]="referralForm.get('researchUnit').valid || referralForm.get('researchUnit').untouched">
+                        <small>{{translate.error.requiredField}}</small>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td style="width: 10%;">
+                <div>
+                  <button (click)="removeReferral(i)" class="btn btn-outline-secondary my-3">{{translate.button.delete}}</button>
+                </div>
+                <div>
+                  <input type="button" [disabled]="makeDiagnosisForm.invalid" (click)="generateReferralPdf(referralForm.value)" 
+                  value="{{translate.button.createPdf}}" class="btn btn-outline-secondary">
+                </div>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="form-group">
+      <input type="button" (click)="addReferral()" value="{{translate.button.addReferral}}" class="btn btn-outline-secondary float-right">
+    </div>
+    <br><br>
+    <div class="form-group">
+      <input type="button" [disabled]="makeDiagnosisForm.invalid" (click)="onSubmitMakeDiagnosis()" value="{{translate.button.diagnosis}}"
+      class="btn btn-primary float-right">
+    </div>
+  </form>
+</div>
+<br>
+<div id="server_answer">
+  <div class="alert alert-success alert-dismissible" *ngIf="answer.serverAnswer === 'ADDED_DIAGNOSIS'">
+    <button type="button" class="close" data-dismiss="alert" (click)="answer.serverAnswer = null">OK</button>
+    <strong>{{answer.subject}}</strong> {{answer.message}}
+  </div>
+  <div class="alert alert-danger alert-dismissible" *ngIf="answer.errorStatus >= 0">
+    <button type="button" class="close" data-dismiss="alert" (click)="answer.errorStatus = -1">OK</button>
+    <strong>{{answer.subject}}</strong> {{answer.message}}
+  </div>
+</div>

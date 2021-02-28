@@ -1,0 +1,91 @@
+<form>
+  <div class="form-group">
+    <label for=""></label>
+    <select [(ngModel)]="selectedIndex" class="form-control font-weight-bold" name="selectDoctor" (change)="getDoctorFreeDays()" id="selectDoctor">
+      <option value="-1">Select</option>
+      <option *ngFor="let doctor of doctorList; let i=index" [ngValue]="i">
+        {{doctor.user.firstName}} {{doctor.user.lastName}}
+      </option>
+    </select>
+  </div>
+</form>
+
+<div *ngIf="selectedIndex >= 0">
+  <div class="jumbotron py-2">
+    <h5>
+      {{doctorList[selectedIndex].user.firstName}} {{doctorList[selectedIndex].user.lastName}}
+    </h5>
+    <table>
+      <tr>
+        <td>
+          <img [src]="doctorList[selectedIndex].user.photo ? 'data:image/png;base64,' + doctorList[selectedIndex].user.photo : 'assets/img/alterphoto.jpeg'"
+          style="width: 150px;" alt="Image">
+        </td>
+        <td>
+          <table class="ml-3">
+            <tr>
+              <td>{{translate.user.phone}}</td>
+              <td>{{doctorList[selectedIndex].phone}}</td>
+            </tr>
+            <tr>
+              <td>Email:</td>
+              <td>{{doctorList[selectedIndex].user.email}}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <form [formGroup]="doctorFreeDayForm" (ngSubmit)="addDoctorFreeDayOnSubmit()">
+    <div class="form-group">
+      <label for="doctorFreeDay">{{translate.visit.addDoctorFreeDay}}</label>
+      <input type="date" formControlName="doctorFreeDay" id="doctorFreeDay" class="form-control form-control-sm">
+    </div>
+    <div class="form-group">
+      <input [disabled]="!doctorFreeDayForm.get('doctorFreeDay').value" class="btn btn-primary float-right" type="submit" value="{{translate.button.save}}">
+    </div>
+  </form>
+  <br><br>
+  <table class="table table-striped">
+    <thead align="center">
+      <tr>
+        <th>#</th>
+        <th>{{translate.visit.freeDay}}</th>
+        <th>{{translate.button.delete}}</th>
+      </tr>
+    </thead>
+    <tbody align="center">
+      <tr *ngFor="let doctorFreeDay of filteredDoctorFreeDayList; index as i">
+        <td>{{i+1}}</td>
+        <td>{{doctorFreeDay.freeDay}}</td>
+        <td>
+          <input [(ngModel)]="doctorFreeDayId" type="radio" [value]="doctorFreeDay.id" name="doctorFreeDayId" 
+            style=" -ms-transform: scale(1.5); /* IE */
+                    -moz-transform: scale(1.5); /* FF */
+                    -webkit-transform: scale(1.5); /* Safari and Chrome */
+                    -o-transform: scale(1.5); /*Opera*/
+                    transform: scale(1.5);
+                    padding: 5px;">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert alert-success alert-dismissible" *ngIf="answer.serverAnswer === 'ADDED' || answer.serverAnswer === 'FREE_DAY_REMOVED'">
+    <button type="button" class="close" data-dismiss="alert" (click)="answer.serverAnswer = null">OK</button>
+    <strong>{{answer.subject}}</strong> {{answer.message}}
+  </div>
+  <div class="alert alert-danger alert-dismissible" *ngIf="answer.serverAnswer === 'PAST_DATE'">
+    <button type="button" class="close" data-dismiss="alert" (click)="answer.serverAnswer = null">OK</button>
+    <strong>{{answer.subject}}</strong> {{answer.message}}
+  </div>
+  <div class="form-group">
+    <input [disabled]="!doctorFreeDayId" class="btn btn-primary float-right" type="button" (click)="deleteFreeDay()" value="{{translate.button.delete}}">
+  </div>
+</div>
+
+<div class="alert alert-danger alert-dismissible" *ngIf="answer.errorStatus >= 0">
+  <button type="button" class="close" data-dismiss="alert" (click)="answer.errorStatus = -1" >OK</button>
+  <strong>{{answer.subject}}</strong> {{answer.message}}
+</div>

@@ -1,0 +1,118 @@
+<div class="container">
+  <div class="media">
+    <img [src]="photoUrl" class="align-self-start mr-3 mt-3" style="width:100px">
+    <div class="media-body mt-3">
+      <h5>{{translate.user.greeting}} {{patient.user.firstName ? patient.user.firstName : ''}} {{patient.user.lastName ? patient.user.lastName : ''}}</h5>
+      <p>{{translate.user.registerSocialUser}}</p>
+    </div>
+  </div>
+  <div class="col-lg-6 py-3">
+    <form #registerSocialUserForm="ngForm" (ngSubmit)="addSocialUser()" novalidate *ngIf="translate && answer.visableForm">
+      <div class="form-group">
+        <label for="firstName">{{translate.user.firstName}}</label>
+        <input [(ngModel)]="patient.user.firstName" [pattern]="patterns.name" type="text" name="firstName" id="firstName" class="form-control form-control-sm"
+        required #firstName="ngModel" [class.is-invalid]="firstName.invalid && firstName.touched">
+          <small class="text-danger" [class.d-none]="firstName.valid || firstName.untouched">{{translate.error.requiredField}}</small>
+      </div>
+      <div class="form-group">
+        <label for="lastName">{{translate.user.lastName}}</label>
+        <input [(ngModel)]="patient.user.lastName" [pattern]="patterns.name" type="text" name="lastName" id="lastName" class="form-control form-control-sm"
+        required #lastName="ngModel" [class.is-invalid]="lastName.invalid && lastName.touched">
+        <small class="text-danger" [class.d-none]="lastName.valid || lastName.untouched">{{translate.error.requiredField}}</small>
+      </div>
+      <div class="form-group">
+        <label for="country">{{translate.user.country}}</label>
+        <input [(ngModel)]="patient.country" [pattern]="patterns.name" type="text" name="country" id="country" class="form-control form-control-sm"
+        required #country="ngModel" [class.is-invalid]="country.invalid && country.touched">
+        <small class="text-danger" [class.d-none]="country.valid || country.untouched">{{translate.error.requiredField}}</small>
+      </div>
+      <div class="form-group">
+        <label for="zipCode">{{translate.user.zipCode}}</label>
+        <input [(ngModel)]="patient.zipCode" [pattern]="patterns.zipCode" type="text" name="zipCode" id="zipCode" class="form-control form-control-sm"
+        required #zipCode="ngModel" [class.is-invalid]="zipCode.invalid && zipCode.touched">
+        <small class="text-danger" [class.d-none]="zipCode.valid || zipCode.untouched">{{translate.error.requiredField}}</small>
+      </div>
+      <div class="form-group">
+        <label for="city">{{translate.user.city}}</label>
+        <input [(ngModel)]="patient.city" [pattern]="patterns.name" type="text" name="city" id="city" class="form-control form-control-sm"
+        required #city="ngModel" [class.is-invalid]="city.invalid && city.touched">
+        <small class="text-danger" [class.d-none]="city.valid || city.untouched">{{translate.error.requiredField}}</small>
+      </div>
+      <div class="form-group">
+        <label for="street">{{translate.user.street}}</label>
+        <input [(ngModel)]="patient.street" [pattern]="patterns.name" type="text" name="street" id="street" class="form-control form-control-sm"
+        required #street="ngModel" [class.is-invalid]="street.invalid && street.touched">
+        <small class="text-danger" [class.d-none]="street.valid || street.untouched">{{translate.error.requiredField}}</small>
+      </div>
+      <div class="form-group">
+        <label for="streetNo">{{translate.user.streetNo}}</label>
+        <input [(ngModel)]="patient.streetNo" [pattern]="patterns.smalName" type="text" name="streetNo" id="streetNo" class="form-control form-control-sm"
+        required #streetNo="ngModel" [class.is-invalid]="streetNo.invalid && streetNo.touched">
+        <small class="text-danger" [class.d-none]="streetNo.valid || streetNo.untouched">{{translate.error.requiredField}}</small>
+      </div>
+      <div class="form-group">
+        <label for="unitNo">{{translate.user.unitNo}}</label>
+        <input [(ngModel)]="patient.unitNo" [pattern]="patterns.smalNameFromZero" type="text" name="unitNo" id="unitNo" class="form-control form-control-sm"
+        #unitNo="ngModel" [class.is-invalid]="unitNo.invalid && unitNo.touched">
+        <small class="text-danger" [class.d-none]="unitNo.valid || unitNo.untouched">{{translate.error.requiredField}}</small>
+      </div>
+      <div class="form-group">
+        <label for="pesel">Pesel:</label>
+        <input [(ngModel)]="patient.pesel" type="text" name="pesel" id="pesel" class="form-control form-control-sm"
+        required #pesel="ngModel" [class.is-invalid]="!isValidPesel && pesel.touched" (change)="checkPeselAndSetGender(patient.pesel)" >
+        <small class="text-danger" [class.d-none]="isValidPesel || pesel.untouched">{{translate.error.requiredField}}</small>
+      </div>
+      <div class="form-group">
+        <label for="gender">{{translate.user.gender}}</label>
+        <input [(ngModel)]="patient.gender" type="text" name="gender" id="gender" class="form-control form-control-sm" disabled
+        required [class.is-invalid]="!isValidPesel && pesel.touched">
+        <small class="text-danger" [class.d-none]="isValidPesel || pesel.untouched">{{translate.error.gender}}</small>
+      </div>
+      <div class="form-group">
+        <label for="phone">{{translate.user.phone}}</label>
+        <input [(ngModel)]="patient.phone" [pattern]="patterns.phone" type="text" name="phone" id="phone" class="form-control form-control-sm"
+        required #phone="ngModel" [class.is-invalid]="phone.invalid && phone.touched" >
+        <small class="text-danger" [class.d-none]="phone.valid || phone.untouched">{{translate.error.requiredField}}</small>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input [(ngModel)]="patient.user.email" [pattern]="patterns.email" type="email" class="form-control form-control-sm" name="email" id="email"
+        required #email="ngModel" [class.is-invalid]="email.invalid && email.touched" >
+        <small class="text-danger" [class.d-none]="email.valid || email.untouched">{{translate.error.requiredField}}</small>
+      </div>
+      <div class="form-group">
+        <label for="language">{{translate.user.language}}</label>
+        <select [(ngModel)]="patient.user.language" class="form-control form-control-sm" name="language" id="language"
+          #language="ngModel" [class.is-invalid]="language.value === languageCodeList[0]">
+          <option *ngFor="let lang of languageCodeList" [ngValue]="lang">
+            {{lang}}
+          </option>
+        </select>
+        <small id="language" class="text-danger" [class.d-none]="language.value != languageCodeList[0]">{{translate.error.language}}</small>
+      </div>
+      <div class="form-group">
+        <label for="recaptcha">{{translate.home.reCaptcha}}</label>
+        <re-captcha (resolved)="resolvedReCaptcha($event)" name="captcha" siteKey="6LeiecsUAAAAAHR5QgJYzhQsMsQKdzTQCQv5wV4w"></re-captcha>
+      </div>
+      <div class="form-group">
+        <input [disabled]="registerSocialUserForm.form.invalid || language.value === languageCodeList[0] || !reCaptchaVerify || !isValidPesel"
+        class="btn btn-primary" type="submit" value="{{translate.button.save}}">
+      </div>
+
+    </form>
+
+    <div id="server_answer">
+      <div class="alert alert-danger alert-dismissible" *ngIf="answer.serverAnswer === 'INVALID' || answer.serverAnswer === 'RECAPTCHA_FAIL' ||
+      answer.serverAnswer === 'PATIEN_NOT_ENABLED'">
+        <button type="button" class="close" data-dismiss="alert" (click)="answer.serverAnswer = null">OK</button>
+        <strong>{{answer.subject}}</strong> {{answer.message}}
+      </div>
+      <div class="alert alert-danger alert-dismissible" *ngIf="answer.errorStatus >= 0">
+        <button type="button" class="close" data-dismiss="alert" (click)="answer.errorStatus = -1" >OK</button>
+        <strong>{{answer.subject}}</strong> {{answer.message}}
+      </div>
+    </div>
+  </div>
+</div>
+
+

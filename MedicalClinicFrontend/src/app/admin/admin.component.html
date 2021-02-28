@@ -1,0 +1,45 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-4 pt-3">
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./addemployee" routerLinkActive="active" id="addemployee">{{translate.menu.addEmployee}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./editemployee" routerLinkActive="active" id="editemployee">{{translate.menu.updateEmployee}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./adddoctor" routerLinkActive="active" id="adddoctor">{{translate.menu.addDoctor}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./editdoctor" routerLinkActive="active" id="editdoctor">{{translate.menu.updateDoctor}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./editdoctoragenda" routerLinkActive="active" id="editdoctoragenda">{{translate.menu.updateDoctorAgenda}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./addpatient" routerLinkActive="active" id="addpatient">{{translate.menu.addPatient}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./editpatient" routerLinkActive="active" id="editpatient">{{translate.menu.updatePatient}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./removepatient" routerLinkActive="active" id="removepatient">{{translate.menu.removePatient}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./doctorfreedays" routerLinkActive="active" id="doctorfreedays">{{translate.menu.doctorFreeDays}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./clinicfreedays" routerLinkActive="active" id="clinicfreedays">{{translate.menu.clinicFreeDays}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./selfedit" routerLinkActive="active" id="selfedit">{{translate.menu.selfUpdate}}</a>
+        </li>
+      </ul>
+      <hr class="d-sm-none">
+    </div>
+    <div class="col-md-8 col-lg-6 pt-3">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

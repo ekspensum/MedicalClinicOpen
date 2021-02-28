@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-4 pt-3">
+      <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./schedulevisit" routerLinkActive="active" id="schedulevisit">{{translate.menu.scheduleVisit}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./myvisits" routerLinkActive="active" id="myvisits">{{translate.menu.myVisits}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./cancelvisit" routerLinkActive="active" id="cancelvisit">{{translate.menu.cancelVisit}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./medicaldocumentation" routerLinkActive="active" id="medicaldocumentation">
+            {{translate.menu.medicalDocumentation}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./selfedit" routerLinkActive="active" id="selfedit">{{translate.menu.selfUpdate}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="./removemyaccount" routerLinkActive="active" id="removemyaccount">{{translate.menu.removeMyAccount}}</a>
+        </li>
+      </ul>
+      <hr class="d-sm-none">
+    </div>
+    <div class="col-md-8 pt-3">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
